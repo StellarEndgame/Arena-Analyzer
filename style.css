@@ -1,0 +1,342 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background:
+        radial-gradient(
+            circle at top,
+            #17264b 0,
+            #080b16 45%,
+            #05060c 100%
+        );
+
+    color: #ffffff;
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    min-height: 100vh;
+}
+
+
+.container {
+    width: min(1200px, 94%);
+    margin: auto;
+    padding: 40px 0 80px;
+}
+
+
+/* HEADER */
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    font-size: 32px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #286cff,
+            #8d45ff
+        );
+
+    box-shadow:
+        0 0 30px rgba(55, 110, 255, .35);
+}
+
+h1 {
+    margin: 0;
+    font-size: 34px;
+}
+
+header p {
+    margin: 5px 0 0;
+    color: #aeb9d6;
+}
+
+
+/* CARDS */
+
+.card {
+    background: rgba(13, 18, 34, .88);
+
+    border: 1px solid rgba(120, 145, 200, .18);
+
+    border-radius: 18px;
+
+    padding: 24px;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 15px 50px rgba(0, 0, 0, .25);
+}
+
+.card h2 {
+    margin-top: 0;
+}
+
+
+/* INPUTS */
+
+.link-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.link-row input {
+    flex: 1;
+
+    padding: 14px 16px;
+
+    border-radius: 10px;
+
+    border: 1px solid #293654;
+
+    background: #080d1c;
+
+    color: white;
+
+    outline: none;
+}
+
+.link-row input:focus {
+    border-color: #5d8cff;
+
+    box-shadow:
+        0 0 15px rgba(60, 110, 255, .2);
+}
+
+.remove {
+    width: 45px;
+
+    border: 0;
+
+    border-radius: 10px;
+
+    background: #24121b;
+
+    color: #ff718e;
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+
+/* BUTTONS */
+
+button {
+    border: 0;
+
+    padding: 13px 18px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.secondary {
+    background: #18233d;
+    color: #dce6ff;
+
+    margin-right: 8px;
+}
+
+.primary {
+    background:
+        linear-gradient(
+            135deg,
+            #3577ff,
+            #7d45ff
+        );
+
+    color: white;
+}
+
+
+/* STATUS */
+
+#status {
+    margin: 15px 0;
+}
+
+.status {
+    padding: 14px 18px;
+
+    border-radius: 12px;
+
+    background: #111a2e;
+
+    color: #b9c9ef;
+}
+
+
+/* GRAND TOTAL */
+
+.grand-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 25px;
+
+    margin-bottom: 22px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(35, 91, 210, .35),
+            rgba(117, 54, 190, .35)
+        );
+
+    border: 1px solid rgba(120, 160, 255, .3);
+}
+
+.grand-total span {
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.grand-total strong {
+    font-size: 36px;
+}
+
+
+/* TABLE */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px 12px;
+
+    border-bottom:
+        1px solid rgba(130, 150, 190, .12);
+
+    text-align: left;
+}
+
+th {
+    color: #8fa4d0;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+td:last-child {
+    font-weight: bold;
+}
+
+tr:hover {
+    background: rgba(70, 100, 170, .08);
+}
+
+
+/* ARENAS */
+
+.arena {
+    padding: 18px;
+
+    margin-top: 14px;
+
+    border-radius: 14px;
+
+    background: #0a1020;
+
+    border: 1px solid #1e2a45;
+}
+
+.arena-title {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+}
+
+.arena-title strong {
+    font-size: 18px;
+}
+
+.arena-title a {
+    color: #72a2ff;
+    text-decoration: none;
+}
+
+
+/* UTILITY */
+
+.muted {
+    color: #8f9bb7;
+}
+
+.hidden {
+    display: none;
+}
+
+.rank {
+    font-weight: bold;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: 94%;
+        padding-top: 25px;
+    }
+
+    h1 {
+        font-size: 27px;
+    }
+
+    .link-row {
+        flex-direction: row;
+    }
+
+    .grand-total strong {
+        font-size: 28px;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+    }
+}
