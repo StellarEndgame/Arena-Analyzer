@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Arena Analyzer</title>
+
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <header>
+        <div class="logo">♟</div>
+
+        <div>
+            <h1>Arena Analyzer</h1>
+            <p>
+                Combine Chess.com Arena results
+            </p>
+        </div>
+    </header>
+
+
+    <!-- INPUT -->
+
+    <section class="card">
+
+        <h2>🔗 Arena Links</h2>
+
+        <p class="muted">
+            Add one or more Chess.com Arena links.
+        </p>
+
+        <div id="links"></div>
+
+        <button
+            class="secondary"
+            onclick="addLink()"
+        >
+            ＋ Add Arena
+        </button>
+
+        <button
+            class="primary"
+            onclick="analyze()"
+        >
+            Analyze Arenas
+        </button>
+
+    </section>
+
+
+    <!-- STATUS -->
+
+    <div id="status"></div>
+
+
+    <!-- RESULTS -->
+
+    <section id="results" class="hidden">
+
+        <!-- GRAND TOTAL -->
+
+        <div class="grand-total">
+
+            <span>GRAND TOTAL</span>
+
+            <strong id="grandTotal">
+                0
+            </strong>
+
+        </div>
+
+
+        <!-- ARENAS -->
+
+        <section class="card">
+
+            <h2>🏟️ Separate Arena Results</h2>
+
+            <div id="arenaResults"></div>
+
+        </section>
+
+
+        <!-- PLAYERS -->
+
+        <section class="card">
+
+            <h2>👤 Combined Player Results</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Player</th>
+                            <th>Club</th>
+                            <th id="playerArenaHeaders">
+                                Arenas
+                            </th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="playerResults"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- CLUBS -->
+
+        <section class="card">
+
+            <h2>🏆 Combined Club Results</h2>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Club</th>
+                            <th>Arena Scores</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="clubResults"></tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </section>
+
+</div>
+
+<script src="/static/script.js"></script>
+
+</body>
+</html>
