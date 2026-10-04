@@ -1,156 +1,1536 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Arena Analyzer</title>
+<title>Arena Analyzer</title>
 
-    <link rel="stylesheet" href="/static/style.css">
+<style>
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 15% 10%, rgba(75, 90, 255, .18), transparent 30%),
+        radial-gradient(circle at 85% 20%, rgba(150, 60, 255, .16), transparent 30%),
+        linear-gradient(135deg, #050713, #090b18 55%, #05060d);
+    color: #f5f7ff;
+    min-height: 100vh;
+}
+
+.container {
+    width: min(1200px, calc(100% - 32px));
+    margin: auto;
+    padding: 35px 0 70px;
+}
+
+/* HEADER */
+
+.hero {
+    text-align: center;
+    padding: 35px 20px 30px;
+}
+
+.logo {
+    width: 65px;
+    height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #536dff, #9d4edd);
+    font-size: 32px;
+    box-shadow:
+        0 0 25px rgba(90, 100, 255, .45),
+        0 0 60px rgba(150, 60, 255, .15);
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(32px, 5vw, 55px);
+    font-weight: 900;
+    letter-spacing: -1.5px;
+}
+
+.subtitle {
+    color: #aeb6d4;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+/* CARD */
+
+.card {
+    background: rgba(14, 17, 34, .82);
+    border: 1px solid rgba(130, 145, 255, .18);
+    border-radius: 18px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow:
+        0 15px 50px rgba(0, 0, 0, .25),
+        inset 0 1px rgba(255, 255, 255, .025);
+    backdrop-filter: blur(12px);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 17px;
+}
+
+/* ARENA INPUTS */
+
+.arena-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.arena-input {
+    flex: 1;
+    min-width: 0;
+    background: #080b18;
+    border: 1px solid #272d4d;
+    color: white;
+    border-radius: 10px;
+    padding: 13px 14px;
+    outline: none;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.arena-input:focus {
+    border-color: #6575ff;
+    box-shadow: 0 0 0 3px rgba(101, 117, 255, .1);
+}
+
+.remove-btn {
+    width: 45px;
+    border: 0;
+    border-radius: 10px;
+    background: #211421;
+    color: #ff718b;
+    cursor: pointer;
+    font-size: 18px;
+    transition: .2s;
+}
+
+.remove-btn:hover {
+    background: #3b1723;
+    transform: translateY(-1px);
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+button {
+    border: 0;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 12px 17px;
+    color: white;
+    font-weight: 750;
+    transition: .2s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+.add-btn {
+    background: #191e38;
+    border: 1px solid #31395f;
+}
+
+.analyze-btn {
+    background: linear-gradient(135deg, #536dff, #7b42ff);
+    box-shadow: 0 8px 25px rgba(90, 75, 255, .25);
+}
+
+.clear-btn {
+    background: #171a2a;
+    border: 1px solid #2b3047;
+}
+
+/* STATUS */
+
+.status {
+    display: none;
+    padding: 14px;
+    margin-top: 15px;
+    border-radius: 10px;
+    background: rgba(65, 85, 180, .1);
+    border: 1px solid rgba(100, 120, 255, .2);
+    color: #cbd2ff;
+}
+
+.status.show {
+    display: block;
+}
+
+.status.error {
+    background: rgba(180, 45, 70, .1);
+    border-color: rgba(255, 80, 110, .25);
+    color: #ffabb9;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.stat {
+    padding: 20px;
+    border-radius: 15px;
+    background: rgba(16, 20, 40, .8);
+    border: 1px solid rgba(120, 130, 255, .14);
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 900;
+}
+
+.stat-label {
+    color: #8f97b6;
+    margin-top: 4px;
+    font-size: 13px;
+}
+
+/* TABLE */
+
+.table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid #202640;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+th {
+    background: #11162a;
+    color: #9fa9d0;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+}
+
+th,
+td {
+    padding: 13px 14px;
+    text-align: left;
+    border-bottom: 1px solid #1d2238;
+}
+
+td {
+    color: #e9ecfa;
+    font-size: 14px;
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+tbody tr:hover {
+    background: rgba(90, 105, 220, .07);
+}
+
+.rank {
+    color: #8c95b7;
+    font-weight: 800;
+}
+
+.points {
+    font-weight: 850;
+    color: #aeb9ff;
+}
+
+.total {
+    font-weight: 900;
+    color: #ffffff;
+}
+
+/* EMPTY */
+
+.empty {
+    text-align: center;
+    padding: 35px 15px;
+    color: #777f9e;
+}
+
+/* ARENA BADGE */
+
+.arena-name {
+    color: #c9d0ff;
+    font-weight: 750;
+}
+
+.url-small {
+    color: #69718e;
+    font-size: 11px;
+    margin-top: 4px;
+    word-break: break-all;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    color: #59617d;
+    font-size: 12px;
+    padding-top: 20px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: min(100% - 20px, 1200px);
+        padding-top: 15px;
+    }
+
+    .hero {
+        padding-top: 20px;
+    }
+
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    .arena-row {
+        flex-direction: row;
+    }
+
+    .card {
+        padding: 16px;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <div class="container">
 
-    <header>
+    <section class="hero">
         <div class="logo">♟</div>
-
-        <div>
-            <h1>Arena Analyzer</h1>
-            <p>
-                Combine Chess.com Arena results
-            </p>
+        <h1>Arena Analyzer</h1>
+        <div class="subtitle">
+            Analyze Chess.com Arenas and combine player & club results
         </div>
-    </header>
+    </section>
 
 
     <!-- INPUT -->
 
     <section class="card">
 
-        <h2>🔗 Arena Links</h2>
+        <div class="card-title">
+            🔗 Arena Links
+        </div>
 
-        <p class="muted">
-            Add one or more Chess.com Arena links.
-        </p>
+        <div id="arenaInputs">
 
-        <div id="links"></div>
+            <div class="arena-row">
+                <input
+                    class="arena-input"
+                    type="url"
+                    placeholder="https://www.chess.com/tournament/live/..."
+                >
+                <button class="remove-btn" onclick="removeArena(this)">×</button>
+            </div>
 
-        <button
-            class="secondary"
-            onclick="addLink()"
-        >
-            ＋ Add Arena
-        </button>
+        </div>
 
-        <button
-            class="primary"
-            onclick="analyze()"
-        >
-            Analyze Arenas
-        </button>
+        <div class="buttons">
+
+            <button class="add-btn" onclick="addArena()">
+                ＋ Add Arena
+            </button>
+
+            <button class="analyze-btn" onclick="analyzeArenas()">
+                🔍 Analyze Arenas
+            </button>
+
+            <button class="clear-btn" onclick="clearAll()">
+                Clear
+            </button>
+
+        </div>
+
+        <div id="status" class="status"></div>
 
     </section>
 
 
-    <!-- STATUS -->
+    <!-- SUMMARY -->
 
-    <div id="status"></div>
+    <div id="results" style="display:none;">
 
+        <div class="stats">
 
-    <!-- RESULTS -->
+            <div class="stat">
+                <div class="stat-number" id="arenaCount">0</div>
+                <div class="stat-label">Arenas</div>
+            </div>
 
-    <section id="results" class="hidden">
+            <div class="stat">
+                <div class="stat-number" id="playerCount">0</div>
+                <div class="stat-label">Players</div>
+            </div>
 
-        <!-- GRAND TOTAL -->
-
-        <div class="grand-total">
-
-            <span>GRAND TOTAL</span>
-
-            <strong id="grandTotal">
-                0
-            </strong>
+            <div class="stat">
+                <div class="stat-number" id="clubCount">0</div>
+                <div class="stat-label">Clubs</div>
+            </div>
 
         </div>
 
 
-        <!-- ARENAS -->
+        <!-- SEPARATE ARENAS -->
 
         <section class="card">
 
-            <h2>🏟️ Separate Arena Results</h2>
-
-            <div id="arenaResults"></div>
-
-        </section>
-
-
-        <!-- PLAYERS -->
-
-        <section class="card">
-
-            <h2>👤 Combined Player Results</h2>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Player</th>
-                            <th>Club</th>
-                            <th id="playerArenaHeaders">
-                                Arenas
-                            </th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="playerResults"></tbody>
-
-                </table>
-
+            <div class="card-title">
+                🏟️ Separate Arena Results
             </div>
 
+            <div id="separateResults"></div>
+
         </section>
 
 
-        <!-- CLUBS -->
+        <!-- COMBINED PLAYERS -->
 
         <section class="card">
 
-            <h2>🏆 Combined Club Results</h2>
-
-            <div class="table-wrapper">
-
-                <table>
-
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Club</th>
-                            <th>Arena Scores</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-
-                    <tbody id="clubResults"></tbody>
-
-                </table>
-
+            <div class="card-title">
+                👤 Combined Player Results
             </div>
+
+            <div id="playerResults"></div>
 
         </section>
 
-    </section>
+
+        <!-- COMBINED CLUBS -->
+
+        <section class="card">
+
+            <div class="card-title">
+                🏆 Combined Club Results
+            </div>
+
+            <div id="clubResults"></div>
+
+        </section>
+
+    </div>
+
+
+    <footer>
+        Arena Analyzer • Built for Chess.com Arena analysis
+    </footer>
 
 </div>
 
-<script src="/static/script.js"></script>
+
+<script>
+
+/*
+    ==========================================================
+    ARENA ANALYZER
+    ==========================================================
+
+    This is a completely client-side version.
+
+    There is no Python backend.
+    There is no external CSS.
+    There is no external JavaScript.
+
+    Everything is contained in this HTML file.
+*/
+
+
+let arenaCounter = 1;
+
+
+/* ==========================================================
+   INPUT MANAGEMENT
+   ========================================================== */
+
+function addArena() {
+
+    arenaCounter++;
+
+    const container = document.getElementById("arenaInputs");
+
+    const row = document.createElement("div");
+
+    row.className = "arena-row";
+
+    row.innerHTML = `
+        <input
+            class="arena-input"
+            type="url"
+            placeholder="https://www.chess.com/tournament/live/..."
+        >
+
+        <button
+            class="remove-btn"
+            onclick="removeArena(this)"
+        >
+            ×
+        </button>
+    `;
+
+    container.appendChild(row);
+}
+
+
+function removeArena(button) {
+
+    const rows =
+        document.querySelectorAll(".arena-row");
+
+    if (rows.length === 1) {
+        rows[0].querySelector("input").value = "";
+        return;
+    }
+
+    button.parentElement.remove();
+}
+
+
+/* ==========================================================
+   STATUS
+   ========================================================== */
+
+function showStatus(message, error = false) {
+
+    const status =
+        document.getElementById("status");
+
+    status.innerHTML = message;
+
+    status.className =
+        "status show" + (error ? " error" : "");
+}
+
+
+/* ==========================================================
+   URL PARSER
+   ========================================================== */
+
+function extractTournamentId(url) {
+
+    try {
+
+        const parsed = new URL(url);
+
+        /*
+            Handles URLs such as:
+
+            /tournament/live/123456
+            /tournament/live/name-123456
+        */
+
+        const parts =
+            parsed.pathname.split("/").filter(Boolean);
+
+        const liveIndex =
+            parts.indexOf("live");
+
+        if (liveIndex !== -1 && parts[liveIndex + 1]) {
+
+            return parts[liveIndex + 1];
+
+        }
+
+        return null;
+
+    } catch {
+
+        return null;
+
+    }
+}
+
+
+/* ==========================================================
+   CHESS.COM API JSONP
+   ==========================================================
+
+   Chess.com's PubAPI supports JSONP.
+
+   This allows a static GitHub Pages website to request
+   public API data without needing Python.
+*/
+
+
+function chessApi(endpoint) {
+
+    return new Promise((resolve, reject) => {
+
+        const callbackName =
+            "arenaAnalyzerCallback_" +
+            Date.now() +
+            "_" +
+            Math.random()
+                .toString(36)
+                .substring(2);
+
+        const script =
+            document.createElement("script");
+
+        const timeout =
+            setTimeout(() => {
+
+                cleanup();
+
+                reject(
+                    new Error(
+                        "Chess.com API request timed out."
+                    )
+                );
+
+            }, 15000);
+
+
+        window[callbackName] =
+            function(data) {
+
+                clearTimeout(timeout);
+
+                cleanup();
+
+                resolve(data);
+
+            };
+
+
+        function cleanup() {
+
+            delete window[callbackName];
+
+            if (script.parentNode) {
+                script.parentNode.removeChild(script);
+            }
+
+        }
+
+
+        script.onerror = function() {
+
+            clearTimeout(timeout);
+
+            cleanup();
+
+            reject(
+                new Error(
+                    "Could not access Chess.com API."
+                )
+            );
+
+        };
+
+
+        script.src =
+            "https://api.chess.com/pub/tournament/" +
+            encodeURIComponent(endpoint) +
+            "?callback=" +
+            encodeURIComponent(callbackName);
+
+
+        document.body.appendChild(script);
+
+    });
+}
+
+
+/* ==========================================================
+   ANALYZE
+   ========================================================== */
+
+async function analyzeArenas() {
+
+    const inputs =
+        document.querySelectorAll(".arena-input");
+
+    const urls =
+        Array.from(inputs)
+            .map(input => input.value.trim())
+            .filter(Boolean);
+
+
+    if (!urls.length) {
+
+        showStatus(
+            "Please add at least one Chess.com Arena link.",
+            true
+        );
+
+        return;
+    }
+
+
+    showStatus(
+        "⏳ Loading Arena data from Chess.com..."
+    );
+
+
+    const arenas = [];
+
+    const combinedPlayers = {};
+
+    const combinedClubs = {};
+
+
+    for (let i = 0; i < urls.length; i++) {
+
+        const url = urls[i];
+
+        const tournamentId =
+            extractTournamentId(url);
+
+
+        if (!tournamentId) {
+
+            arenas.push({
+
+                name: "Invalid Arena URL",
+
+                url: url,
+
+                players: [],
+
+                error: true
+
+            });
+
+            continue;
+
+        }
+
+
+        try {
+
+            const data =
+                await chessApi(tournamentId);
+
+
+            const arena =
+                parseTournamentData(
+                    data,
+                    url,
+                    i + 1
+                );
+
+
+            arenas.push(arena);
+
+
+            /*
+                Combine players.
+            */
+
+            arena.players.forEach(player => {
+
+                const username =
+                    player.username.toLowerCase();
+
+
+                if (!combinedPlayers[username]) {
+
+                    combinedPlayers[username] = {
+
+                        username:
+                            player.username,
+
+                        club:
+                            player.club || "Unknown",
+
+                        arenas: {},
+
+                        total: 0
+
+                    };
+
+                }
+
+
+                combinedPlayers[username]
+                    .arenas[arena.name] =
+                    player.points;
+
+
+                combinedPlayers[username].total +=
+                    Number(player.points) || 0;
+
+            });
+
+
+        } catch (error) {
+
+            arenas.push({
+
+                name:
+                    "Arena " + (i + 1),
+
+                url: url,
+
+                players: [],
+
+                error: true,
+
+                errorMessage:
+                    error.message
+
+            });
+
+        }
+
+    }
+
+
+    /*
+        Build club totals from player data.
+    */
+
+    Object.values(combinedPlayers)
+        .forEach(player => {
+
+            const club =
+                player.club || "Unknown";
+
+            if (!combinedClubs[club]) {
+
+                combinedClubs[club] = {
+
+                    club: club,
+
+                    arenas: {},
+
+                    total: 0
+
+                };
+
+            }
+
+
+            Object.entries(player.arenas)
+                .forEach(([arena, points]) => {
+
+                    if (!combinedClubs[club]
+                        .arenas[arena]) {
+
+                        combinedClubs[club]
+                            .arenas[arena] = 0;
+
+                    }
+
+
+                    combinedClubs[club]
+                        .arenas[arena] +=
+                        Number(points) || 0;
+
+
+                    combinedClubs[club].total +=
+                        Number(points) || 0;
+
+                });
+
+        });
+
+
+    renderResults(
+        arenas,
+        Object.values(combinedPlayers),
+        Object.values(combinedClubs)
+    );
+
+
+    showStatus(
+        "✅ Analysis complete."
+    );
+}
+
+
+/* ==========================================================
+   PARSE TOURNAMENT DATA
+   ========================================================== */
+
+function parseTournamentData(
+    data,
+    url,
+    number
+) {
+
+    const name =
+        data.name ||
+        data.title ||
+        ("Arena " + number);
+
+
+    /*
+        Chess.com's tournament API normally exposes
+        a "players" array for tournament leaderboard data.
+
+        We deliberately check several possible structures
+        so the page does not crash if the API format changes.
+    */
+
+    let players = [];
+
+
+    if (Array.isArray(data.players)) {
+
+        players = data.players;
+
+    } else if (
+        data.players &&
+        typeof data.players === "object"
+    ) {
+
+        players =
+            Object.values(data.players);
+
+    } else if (
+        data.leaderboard &&
+        Array.isArray(data.leaderboard)
+    ) {
+
+        players =
+            data.leaderboard;
+
+    }
+
+
+    const parsedPlayers =
+        players.map((player, index) => {
+
+            const username =
+                player.username ||
+                player.name ||
+                player.player ||
+                player.handle ||
+                "Unknown Player";
+
+
+            const points =
+                Number(
+                    player.points ??
+                    player.score ??
+                    player.total ??
+                    0
+                );
+
+
+            /*
+                The tournament endpoint may not provide
+                club information.
+
+                We keep the field so that club data can be
+                supported whenever the source provides it.
+            */
+
+            const club =
+                player.club ||
+                player.club_name ||
+                player.team ||
+                "Unknown";
+
+
+            return {
+
+                rank:
+                    player.rank ||
+                    index + 1,
+
+                username:
+                    username,
+
+                club:
+                    club,
+
+                points:
+                    points
+
+            };
+
+        });
+
+
+    return {
+
+        name:
+            name,
+
+        url:
+            url,
+
+        players:
+            parsedPlayers,
+
+        raw:
+            data
+
+    };
+
+}
+
+
+/* ==========================================================
+   RENDER EVERYTHING
+   ========================================================== */
+
+function renderResults(
+    arenas,
+    players,
+    clubs
+) {
+
+    document.getElementById("results")
+        .style.display = "block";
+
+
+    document.getElementById("arenaCount")
+        .textContent =
+            arenas.length;
+
+
+    document.getElementById("playerCount")
+        .textContent =
+            players.length;
+
+
+    document.getElementById("clubCount")
+        .textContent =
+            clubs.length;
+
+
+    renderSeparateArenas(arenas);
+
+    renderPlayers(arenas, players);
+
+    renderClubs(arenas, clubs);
+
+}
+
+
+/* ==========================================================
+   SEPARATE ARENAS
+   ========================================================== */
+
+function renderSeparateArenas(arenas) {
+
+    const container =
+        document.getElementById(
+            "separateResults"
+        );
+
+
+    if (!arenas.length) {
+
+        container.innerHTML =
+            `<div class="empty">
+                No Arena results.
+             </div>`;
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        arenas.map(arena => {
+
+            if (arena.error) {
+
+                return `
+                    <div class="card"
+                         style="margin-bottom:12px;">
+
+                        <div class="arena-name">
+                            ⚠️ ${escapeHtml(arena.name)}
+                        </div>
+
+                        <div class="url-small">
+                            ${escapeHtml(arena.url)}
+                        </div>
+
+                        <div class="empty">
+                            ${
+                                escapeHtml(
+                                    arena.errorMessage ||
+                                    "Could not retrieve this Arena."
+                                )
+                            }
+                        </div>
+
+                    </div>
+                `;
+
+            }
+
+
+            if (!arena.players.length) {
+
+                return `
+                    <div class="card"
+                         style="margin-bottom:12px;">
+
+                        <div class="arena-name">
+                            🏟️ ${escapeHtml(arena.name)}
+                        </div>
+
+                        <div class="url-small">
+                            ${escapeHtml(arena.url)}
+                        </div>
+
+                        <div class="empty">
+
+                            Chess.com returned no leaderboard
+                            player data for this Arena.
+
+                            <br><br>
+
+                            The official PubAPI does not always
+                            expose the complete Arena leaderboard.
+
+                        </div>
+
+                    </div>
+                `;
+
+            }
+
+
+            const rows =
+                arena.players
+                    .sort((a, b) =>
+                        Number(b.points) -
+                        Number(a.points)
+                    )
+                    .map((player, index) => {
+
+                        return `
+                            <tr>
+
+                                <td class="rank">
+                                    ${index + 1}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        player.username
+                                    )}
+                                </td>
+
+                                <td>
+                                    ${escapeHtml(
+                                        player.club
+                                    )}
+                                </td>
+
+                                <td class="points">
+                                    ${player.points}
+                                </td>
+
+                            </tr>
+                        `;
+
+                    })
+                    .join("");
+
+
+            return `
+                <div class="card"
+                     style="margin-bottom:15px;">
+
+                    <div class="arena-name">
+                        🏟️ ${escapeHtml(arena.name)}
+                    </div>
+
+                    <div class="url-small">
+                        ${escapeHtml(arena.url)}
+                    </div>
+
+                    <br>
+
+                    <div class="table-wrap">
+
+                        <table>
+
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Player</th>
+                                    <th>Club</th>
+                                    <th>Points</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                ${rows}
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+            `;
+
+        })
+        .join("");
+
+}
+
+
+/* ==========================================================
+   COMBINED PLAYERS
+   ========================================================== */
+
+function renderPlayers(
+    arenas,
+    players
+) {
+
+    const container =
+        document.getElementById(
+            "playerResults"
+        );
+
+
+    if (!players.length) {
+
+        container.innerHTML =
+            `<div class="empty">
+                No player data available.
+             </div>`;
+
+        return;
+
+    }
+
+
+    players.sort(
+        (a, b) =>
+            Number(b.total) -
+            Number(a.total)
+    );
+
+
+    const arenaHeaders =
+        arenas
+            .map(arena =>
+                `<th>
+                    ${escapeHtml(arena.name)}
+                 </th>`
+            )
+            .join("");
+
+
+    const rows =
+        players.map((player, index) => {
+
+            const scores =
+                arenas.map(arena => {
+
+                    const score =
+                        player.arenas[
+                            arena.name
+                        ] ?? 0;
+
+                    return `
+                        <td class="points">
+                            ${score}
+                        </td>
+                    `;
+
+                }).join("");
+
+
+            return `
+                <tr>
+
+                    <td class="rank">
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${escapeHtml(
+                                player.username
+                            )}
+                        </strong>
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            player.club
+                        )}
+                    </td>
+
+                    ${scores}
+
+                    <td class="total">
+                        ${player.total}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+
+    container.innerHTML = `
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Player</th>
+
+                        <th>Club</th>
+
+                        ${arenaHeaders}
+
+                        <th>Total</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${rows}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    `;
+
+}
+
+
+/* ==========================================================
+   COMBINED CLUBS
+   ========================================================== */
+
+function renderClubs(
+    arenas,
+    clubs
+) {
+
+    const container =
+        document.getElementById(
+            "clubResults"
+        );
+
+
+    if (!clubs.length) {
+
+        container.innerHTML =
+            `<div class="empty">
+                No club data available.
+             </div>`;
+
+        return;
+
+    }
+
+
+    clubs.sort(
+        (a, b) =>
+            Number(b.total) -
+            Number(a.total)
+    );
+
+
+    const arenaHeaders =
+        arenas.map(arena =>
+            `<th>
+                ${escapeHtml(arena.name)}
+             </th>`
+        ).join("");
+
+
+    const rows =
+        clubs.map((club, index) => {
+
+            const scores =
+                arenas.map(arena => {
+
+                    const score =
+                        club.arenas[
+                            arena.name
+                        ] ?? 0;
+
+                    return `
+                        <td class="points">
+                            ${score}
+                        </td>
+                    `;
+
+                }).join("");
+
+
+            return `
+                <tr>
+
+                    <td class="rank">
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <strong>
+                            ${escapeHtml(
+                                club.club
+                            )}
+                        </strong>
+                    </td>
+
+                    ${scores}
+
+                    <td class="total">
+                        ${club.total}
+                    </td>
+
+                </tr>
+            `;
+
+        }).join("");
+
+
+    container.innerHTML = `
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Club</th>
+
+                        ${arenaHeaders}
+
+                        <th>Total</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${rows}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    `;
+
+}
+
+
+/* ==========================================================
+   CLEAR
+   ========================================================== */
+
+function clearAll() {
+
+    document.getElementById("arenaInputs")
+        .innerHTML = `
+            <div class="arena-row">
+
+                <input
+                    class="arena-input"
+                    type="url"
+                    placeholder="https://www.chess.com/tournament/live/..."
+                >
+
+                <button
+                    class="remove-btn"
+                    onclick="removeArena(this)"
+                >
+                    ×
+                </button>
+
+            </div>
+        `;
+
+
+    document.getElementById("results")
+        .style.display = "none";
+
+
+    document.getElementById("status")
+        .className = "status";
+
+
+    document.getElementById("status")
+        .innerHTML = "";
+
+}
+
+
+/* ==========================================================
+   HTML ESCAPING
+   ========================================================== */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+
+}
+
+</script>
 
 </body>
 </html>
+```
